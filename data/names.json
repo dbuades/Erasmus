@@ -1,0 +1,274 @@
+[
+  {
+    "id": "AT",
+    "Name": "Austria",
+    "Zone": 1,
+    "Universities": 65,
+    "NStudents": 348095,
+    "NErasmus": 4512
+  },
+  {
+    "id": "BE",
+    "Name": "Belgium",
+    "Zone": 2,
+    "Universities": 76,
+    "NStudents": 480331,
+    "NErasmus": 6245
+  },
+  {
+    "id": "BG",
+    "Name": "Bulgaria",
+    "Zone": 3,
+    "Universities": 43,
+    "NStudents": 278953,
+    "NErasmus": 1305
+  },
+  {
+    "id": "CH",
+    "Name": "Switzerland",
+    "Zone": 1,
+    "Universities": 33,
+    "NStudents": 284170,
+    "NErasmus": 2680
+  },
+  {
+    "id": "CY",
+    "Name": "Cyprus",
+    "Zone": 2,
+    "Universities": 14,
+    "NStudents": 34038,
+    "NErasmus": 274
+  },
+  {
+    "id": "CZ",
+    "Name": "Czech Republic",
+    "Zone": 2,
+    "Universities": 58,
+    "NStudents": 394535,
+    "NErasmus": 6075
+  },
+  {
+    "id": "DE",
+    "Name": "Germany",
+    "Zone": 2,
+    "Universities": 320,
+    "NStudents": 2977387,
+    "NErasmus": 29911
+  },
+  {
+    "id": "DK",
+    "Name": "Denmark",
+    "Zone": 1,
+    "Universities": 62,
+    "NStudents": 278783,
+    "NErasmus": 2540
+  },
+  {
+    "id": "EE",
+    "Name": "Estonia",
+    "Zone": 3,
+    "Universities": 20,
+    "NStudents": 55214,
+    "NErasmus": 716
+  },
+  {
+    "id": "ES",
+    "Name": "Spain",
+    "Zone": 2,
+    "Universities": 172,
+    "NStudents": 1591568,
+    "NErasmus": 30478
+  },
+  {
+    "id": "FI",
+    "Name": "Finland",
+    "Zone": 1,
+    "Universities": 48,
+    "NStudents": 302478,
+    "NErasmus": 4328
+  },
+  {
+    "id": "FR",
+    "Name": "France",
+    "Zone": 1,
+    "Universities": 478,
+    "NStudents": 1928686,
+    "NErasmus": 26018
+  },
+  {
+    "id": "GB",
+    "Name": "United Kingdom",
+    "Zone": 1,
+    "Universities": 168,
+    "NStudents": 2057847,
+    "NErasmus": 10274
+  },
+  {
+    "id": "GR",
+    "Name": "Greece",
+    "Zone": 2,
+    "Universities": 39,
+    "NStudents": 677429,
+    "NErasmus": 3295
+  },
+  {
+    "id": "HR",
+    "Name": "Croatia",
+    "Zone": 2,
+    "Universities": 24,
+    "NStudents": 161904,
+    "NErasmus": 1069
+  },
+  {
+    "id": "HU",
+    "Name": "Hungary",
+    "Zone": 3,
+    "Universities": 49,
+    "NStudents": 296074,
+    "NErasmus": 3020
+  },
+  {
+    "id": "IE",
+    "Name": "Ireland",
+    "Zone": 1,
+    "Universities": 34,
+    "NStudents": 198127,
+    "NErasmus": 2121
+  },
+  {
+    "id": "IS",
+    "Name": "Iceland",
+    "Zone": 2,
+    "Universities": 7,
+    "NStudents": 18455,
+    "NErasmus": 193
+  },
+  {
+    "id": "IT",
+    "Name": "Italy",
+    "Zone": 1,
+    "Universities": 181,
+    "NStudents": 1819929,
+    "NErasmus": 20973
+  },
+  {
+    "id": "LI",
+    "Name": "Liechtenstein",
+    "Zone": 1,
+    "Universities": 1,
+    "NStudents": 750,
+    "NErasmus": 25
+  },
+  {
+    "id": "LT",
+    "Name": "Lithuania",
+    "Zone": 3,
+    "Universities": 42,
+    "NStudents": 140629,
+    "NErasmus": 2319
+  },
+  {
+    "id": "LU",
+    "Name": "Luxembourg",
+    "Zone": 2,
+    "Universities": 1,
+    "NStudents": 6309,
+    "NErasmus": 431
+  },
+  {
+    "id": "LV",
+    "Name": "Latvia",
+    "Zone": 3,
+    "Universities": 38,
+    "NStudents": 69776,
+    "NErasmus": 1359
+  },
+  {
+    "id": "MK",
+    "Name": "Macedonia",
+    "Zone": 3,
+    "Universities": 7,
+    "NStudents": 63543,
+    "NErasmus": 89
+  },
+  {
+    "id": "MT",
+    "Name": "Malta",
+    "Zone": 3,
+    "Universities": 3,
+    "NStudents": 10679,
+    "NErasmus": 148
+  },
+  {
+    "id": "NL",
+    "Name": "Netherlands",
+    "Zone": 2,
+    "Universities": 54,
+    "NStudents": 823914,
+    "NErasmus": 6874
+  },
+  {
+    "id": "NO",
+    "Name": "Norway",
+    "Zone": 1,
+    "Universities": 49,
+    "NStudents": 258395,
+    "NErasmus": 1554
+  },
+  {
+    "id": "PL",
+    "Name": "Poland",
+    "Zone": 3,
+    "Universities": 222,
+    "NStudents": 1662584,
+    "NErasmus": 11343
+  },
+  {
+    "id": "PT",
+    "Name": "Portugal",
+    "Zone": 2,
+    "Universities": 89,
+    "NStudents": 337112,
+    "NErasmus": 5291
+  },
+  {
+    "id": "RO",
+    "Name": "Romania",
+    "Zone": 3,
+    "Universities": 69,
+    "NStudents": 541653,
+    "NErasmus": 3668
+  },
+  {
+    "id": "SE",
+    "Name": "Sweden",
+    "Zone": 1,
+    "Universities": 42,
+    "NStudents": 403313,
+    "NErasmus": 3303
+  },
+  {
+    "id": "SI",
+    "Name": "Slovenia",
+    "Zone": 2,
+    "Universities": 19,
+    "NStudents": 74131,
+    "NErasmus": 1227
+  },
+  {
+    "id": "SK",
+    "Name": "Slovakia",
+    "Zone": 3,
+    "Universities": 33,
+    "NStudents": 181543,
+    "NErasmus": 2550
+  },
+  {
+    "id": "TR",
+    "Name": "Turkey",
+    "Zone": 2,
+    "Universities": 148,
+    "NStudents": 4049124,
+    "NErasmus": 12722
+  }
+]

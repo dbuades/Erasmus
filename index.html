@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Erasmus Exchange Proyect</title>
+
+
+  <link rel="stylesheet" href="assets/css/auto-complete.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/w3.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+</head>
+
+<body style="width:100%; height:100%">
+
+
+<div id="intro" class="w3-display-container w3-indigo" style="height:100%">
+        <img class="w3-display-middle" style="width:70%; max-width:90vh; opacity:0.4" src="./images/stars.svg">
+        <img class="w3-display-middle" style="width:60%; max-width:80vh" src="./images/logo.svg">
+        
+</div>
+        
+<div id="history" class="w3-display-container" style="width:100%">
+        <img  class="w3-display-topmiddle" style="width:80%; height: auto" src="./images/final.svg">
+        <button class="w3-bottom w3-button w3-medium w3-teal" id="go_viz" onclick="go_viz()">Explore!</button>
+</div>
+</body>
+
+<div id="visualization" class="w3-display-container" style="height:100%;max-width:1400px; visibility:hidden">
+
+    <!-- SIDEBAR -->
+    <nav class="w3-sidebar  w3-collapse w3-top w3-card" style="z-index:3;width:300px" id="filters_bar">
+      
+      <!-- Erasmus Logo -->
+      <div class="w3-container w3-bar-block w3-display-container w3-padding-16">
+        <i onclick="w3_close()" class="fa fa-remove w3-hide-large w3-button w3-display-topright"></i>
+        <h3 class="w3-wide w3-center"><b>ERASMUS</b></h3>
+      </div>
+
+      <!-- Search bar -->
+      <div class="w3-bar w3-padding-32" id="search-bar">
+          <input class="w3-input w3-border w3-bar-item" type="text" placeholder="Search for a country..." style="width:80%">
+          <button class"w3-button w3-bar-item" style="width:20%"><i class="fa fa-search"></i></button>
+        </div>
+
+      <!-- Filters -->
+      <div class="w3-padding-16 w3-large w3-text-grey" style="font-weight:bold">
+          
+        <a onclick="opengender()" href="javascript:void(0)" class="w3-button w3-block w3-white w3-center">
+          Gender <i class="fa fa-caret-down"></i>
+        </a>
+
+            <div id="opengender" class="w3-bar-block w3-hide w3-medium gender_bt unselectable">
+                <label><input class="w3-bar-item w3-check" type="checkbox" id="male_bt" value=M>Male</label>
+                <label><input class="w3-bar-item w3-check" type="checkbox" id="female_bt" value=F>Female</label>
+            </div>
+
+
+        <a onclick="opencycle()" href="javascript:void(0)" class="w3-button w3-block w3-white w3-center">
+          Cycle <i class="fa fa-caret-down"></i>
+        </a>
+
+            <div id="opencycle" class="w3-bar-block w3-hide w3-medium cycle_bt unselectable">
+                <label><input class="w3-bar-item w3-check" type="checkbox" id="first_bt" value=1>First</label>
+                <label><input class="w3-bar-item w3-check" type="checkbox" id="second_bt" value=2>Second</label>
+                <label><input class="w3-bar-item w3-check" type="checkbox" id="third_bt" value=3>Third</label>
+            </div>
+
+        <a onclick="opensession()" href="javascript:void(0)" class="w3-button w3-block w3-white w3-center">
+          Session <i class="fa fa-caret-down"></i>
+        </a>
+        
+            <div id="opensession" class="w3-bar-block w3-hide w3-medium session_bt unselectable">
+                <label><input class="w3-bar-item w3-check" type="checkbox" id="year_bt" value=1>Year</label>
+                <label><input class="w3-bar-item w3-check" type="checkbox" id="autumn_bt" value=2>Autumn</label><br>
+                <label><input class="w3-bar-item w3-check" type="checkbox" id="spring_bt" value=3>Spring</label><br><br>
+            </div>
+
+        <a onclick="opendomain()" href="javascript:void(0)" class="w3-button w3-block w3-white w3-center">
+          Domain <i class="fa fa-caret-down"></i>
+        </a>
+              
+            <div id="opendomain" class="w3-bar-block w3-hide w3-medium domain_bt unselectable">
+                <label><input class="w3-bar-item w3-check" type="checkbox" id="education_bt" value=1>Education</label><br>
+                <label><input class="w3-bar-item w3-check" type="checkbox" id="humanities_bt" value=2>Humanities</label><br>
+                <label><input class="w3-bar-item w3-check" type="checkbox" id="social_bt" value=3>Social sciences</label><br>
+                <label><input class="w3-bar-item w3-check" type="checkbox" id="science_bt" value=4>Science</label><br>
+                <label><input class="w3-bar-item w3-check" type="checkbox" id="engineering_bt" value=5>Engineering</label><br>
+                <label><input class="w3-bar-item w3-check" type="checkbox" id="agriculture_bt" value=6>Agriculture</label><br>
+                <label><input class="w3-bar-item w3-check" type="checkbox" id="health_bt" value=7>Health</label><br>
+                <label><input class="w3-bar-item w3-check" type="checkbox" id="services_bt" value=8>Services</label><br><br>
+            </div>
+
+        <div class="w3-padding-32 w3-center unselectable">
+                <h3><span id="total_students"></span> students</h3>
+        </div>
+
+        <div class="w3-center unselectable">
+            <button class="w3-bar-item w3-button w3-medium chart_bt chart_bt_active" id="abs_bt" onclick="toggle_data()">Absolute</button>
+            <button class="w3-bar-item w3-button w3-medium chart_bt" id="norm_bt" onclick="toggle_data()">Normalized</button>
+        </div>
+      
+        <div class="w3-padding-16 w3-center unselectable">
+            <button class="w3-button w3-medium reset_bt" id="reset_filters">Reset filters</button>
+        </div>
+      
+        <div class="w3-center unselectable">
+            
+        </div>
+      </div>
+    </nav>
+
+
+    <!-- PAGE CONTENT! -->
+    <div class="w3-main" style="margin-left:310px">
+
+
+        <!-- Top header -->
+        <header class="w3-container w3-padding-large w3-center w3-bar w3-xlarge w3-card">
+            
+            <button class="w3-bar-item w3-button chart_bt chart_bt_active" style="width:45%" id="bubble_bt" onclick="toggle_viz()">General view</button>
+            <button class="w3-bar-item w3-button chart_bt" style="width:45%" id="sankey_bt" onclick="toggle_viz()">Flux</button>
+            <a href="javascript:void(0)" class="w3-hide-large w3-button w3-right" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+
+        </header>
+    
+
+        <!-- VIZ -->
+      
+        <div class="w3-display-container w3-padding-large w3-center w3-card" style="margin-top:20px" id="viz_here">
+
+                <a href="#" class="w3-container w3-display-topleft fa fa-close w3-xxlarge arrow_icon" style="margin-top:25px;margin-left:40px;color:#6d7887;text-decoration:none;display:none" id="reset_countries"></a>
+                <button class="w3-container w3-display-topmiddle w3-btn w3-padding w3-medium w3-teal" style="margin-top:30px;display:none" id="filter_countries">Filter</button>
+        </div>
+      
+
+    
+    
+    </div>
+
+
+    <!-- Overlay effect when opening sidebar on small screens -->
+    <div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="overlay_bar"></div>
+
+    
+    <!-- FOOTER 
+    <div class="w3-light-gray w3-center w3-bottom w3-padding-16 w3-card">
+        <a href="https://github.com"  target="_blank" class="w3-hover-opacity">Daniel Buades & Victor Pita, 2018</a></div>
+    -->
+ 
+
+  </div>
+
+
+
+
+
+  <!-- Scripts for manipulating the HTML -->
+  <script>
+
+
+    // CLose storytelling and open viz
+    function go_viz() {
+        $("#intro").css("display", "none")
+        $("#history").css("display", "none")
+        $("#visualization").css("visibility", "visible")
+
+    }
+
+    // Change button color
+    function toggle_data() {
+        $("#abs_bt").toggleClass("chart_bt_active");
+        $("#norm_bt").toggleClass("chart_bt_active")
+    }
+
+    function toggle_viz() {
+        $("#bubble_bt").toggleClass("chart_bt_active");
+        $("#sankey_bt").toggleClass("chart_bt_active")
+    }
+
+
+
+      // Gender
+      function opengender() {
+          var d = document.getElementById("opengender");
+          if (d.className.indexOf("w3-show") == -1) {
+              d.className += " w3-show";
+          } else {
+              d.className = d.className.replace(" w3-show", "");
+          }
+      }
+
+      // Cycle
+      function opencycle() {
+          var d = document.getElementById("opencycle");
+          if (d.className.indexOf("w3-show") == -1) {
+              d.className += " w3-show";
+          } else {
+              d.className = d.className.replace(" w3-show", "");
+          }
+      }
+
+      // Session
+      function opensession() {
+          var d = document.getElementById("opensession");
+          if (d.className.indexOf("w3-show") == -1) {
+              d.className += " w3-show";
+          } else {
+              d.className = d.className.replace(" w3-show", "");
+          }
+      }
+
+      // Domain
+      function opendomain() {
+          var d = document.getElementById("opendomain");
+          if (d.className.indexOf("w3-show") == -1) {
+              d.className += " w3-show";
+          } else {
+              d.className = d.className.replace(" w3-show", "");
+          }
+      }
+
+// Open and close sidebar
+function w3_open() {
+    document.getElementById("filters_bar").style.display = "block";
+    document.getElementById("overlay_bar").style.display = "block";
+}
+ 
+function w3_close() {
+    document.getElementById("filters_bar").style.display = "none";
+    document.getElementById("overlay_bar").style.display = "none";
+}
+
+
+
+  </script>
+
+
+  <!-- Libs -->
+  <script type="text/javascript" src="assets/libs/d3.v5.min.js"></script>
+  <script type="text/javascript" src="assets/libs/d3-tip.js"></script>
+  <script type="text/javascript" src="assets/libs/sankey.js"></script>
+  <script type="text/javascript" src="assets/libs/d3-scale-chromatic.min.js"></script>
+  <script type="text/javascript" src="assets/libs/search-bar.js"></script>
+  <script type="text/javascript" src="assets/libs/auto-complete.min.js"></script>
+  <script type="text/javascript" src="assets/libs/jquery.min.js"></script>
+  <script type="text/javascript" src="assets/libs/crossfilter.js"></script>
+  <script type="text/javascript" src="assets/libs/lodash.core.min.js"></script>
+
+  <!-- Our files -->
+  <script type="text/javascript" src="assets/scripts/main.js"></script>
+  <script type="text/javascript" src="assets/scripts/preproc.js"></script>
+  <script type="text/javascript" src="assets/scripts/bubble_chart.js"></script>
+  <script type="text/javascript" src="assets/scripts/sankey_chart.js"></script>
+</body>
+
+</html>
