@@ -36,7 +36,7 @@ var nodeWidth = 20
 
 // Initial draw
 var svg_width = $("#viz_here").width() // First size
-var svg_height = svg_width * 0.6
+var svg_height = svg_width * 0.65
 
 var width = svg_width - margin.left - margin.right
 var height = svg_height - margin.top - margin.bottom
@@ -59,7 +59,7 @@ var border = canvas.append("rect")
 function resize_canvas() {
 
     // Update dimensions
-    svg_height = svg_width * 0.7
+    svg_height = svg_width * 0.65
     width = svg_width - margin.left - margin.right
     height = svg_height - margin.top - margin.bottom
 
