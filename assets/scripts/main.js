@@ -30,9 +30,10 @@ var margin = {
     bottom: 60,
     left: 100
 };
+var nodeWidth = 20 // Sankey
 
-var nodeWidth = 20
-
+// Used to check if the window has really been resized
+var windowWidth = $(window).width()
 
 // Initial draw
 var svg_width = $("#viz_here").width() // First size
@@ -127,25 +128,29 @@ Promise.all([
 
             $(window).resize(function () {
 
-                //console.log($("#viz_here").width())
-                svg_width = $("#viz_here").width()
+                // Check if the screen was really resized
+                if ($(window).width() != windowWidth) {
 
-                // Update dimensions and redraw
-                resize_canvas()
+                    windowWidth = $(window).width()
+                    svg_width = $("#viz_here").width()
+
+                    // Update dimensions and redraw
+                    resize_canvas()
 
 
-                if (currentviz == "bubble") {
+                    if (currentviz == "bubble") {
 
-                    returns = draw_bubble_chart(canvas)
-                    bubble_chart = returns[0]
-                    xtext = returns[1]
-                    ytext = returns[2]
-                    bubble_chart = draw_bubble(bubble_chart, bubble, xtext, ytext)
-                }
+                        returns = draw_bubble_chart(canvas)
+                        bubble_chart = returns[0]
+                        xtext = returns[1]
+                        ytext = returns[2]
+                        bubble_chart = draw_bubble(bubble_chart, bubble, xtext, ytext)
+                    }
 
-                else if (currentviz == "sankey") {
-                    sankey_chart = draw_sankey_chart(canvas);
-                    sankey_chart = draw_sankey(sankey_chart, sankey)
+                    else if (currentviz == "sankey") {
+                        sankey_chart = draw_sankey_chart(canvas);
+                        sankey_chart = draw_sankey(sankey_chart, sankey)
+                    }
                 }
 
             })
