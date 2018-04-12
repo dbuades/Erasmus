@@ -1,5 +1,7 @@
 function draw_sankey_chart(canvas) {
 
+    tip_bubble.hide()
+
     canvas.select(".chart")
         .remove()
 

@@ -33,11 +33,12 @@ var margin = {
 var nodeWidth = 20 // Sankey
 
 // Used to check if the window has really been resized
-var windowWidth = $(window).width()
+var windowWidth = Math.max($(window).width(),310)
+var windowHeight = $(window).height()
 
 // Initial draw
 var svg_width = $("#viz_here").width() // First size
-var svg_height = svg_width * 0.65
+var svg_height = $(window).height()- 120
 
 var width = svg_width - margin.left - margin.right
 var height = svg_height - margin.top - margin.bottom
@@ -60,7 +61,8 @@ var border = canvas.append("rect")
 function resize_canvas() {
 
     // Update dimensions
-    svg_height = svg_width * 0.65
+    svg_width = $("#viz_here").width()
+    svg_height = $(window).height() - 120
     width = svg_width - margin.left - margin.right
     height = svg_height - margin.top - margin.bottom
 
@@ -128,12 +130,12 @@ Promise.all([
 
             $(window).resize(function () {
 
-                // Check if the screen was really resized
-                if ($(window).width() != windowWidth) {
+                // Check if the screen was really resized (avoid unwanted resize on touchscreens)
+                if ( ($(window).width() != windowWidth) || ($(window).height() != windowHeight) ) {
 
                     windowWidth = $(window).width()
-                    svg_width = $("#viz_here").width()
-
+                    windowHeight = $(window).height()
+                    
                     // Update dimensions and redraw
                     resize_canvas()
 
@@ -144,7 +146,7 @@ Promise.all([
                         bubble_chart = returns[0]
                         xtext = returns[1]
                         ytext = returns[2]
-                        bubble_chart = draw_bubble(bubble_chart, bubble, xtext, ytext)
+                        bubble_chart = draw_bubble(bubble_chart, bubble, xtext, ytext, true)
                     }
 
                     else if (currentviz == "sankey") {

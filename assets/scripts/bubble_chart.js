@@ -46,7 +46,6 @@ function draw_bubble_chart(canvas) {
     .style("font-weight", "bold")
     .style("text-anchor", "middle")
     .text("Students received");
-  // .html("Ratio of sent students ・e"+ width/2) 
 
   // Vertical axis
   chart.append("g")
@@ -109,20 +108,27 @@ function draw_bubble_chart(canvas) {
 
 
 // Transition function
-function draw_bubble(chart, data, xtext, ytext) {
-
-  var t = d3.transition()
-    .ease(d3.easeCubic)
-    .duration(1600)
+function draw_bubble(chart, data, xtext, ytext, no_transition) {
 
   chart.call(tip_bubble)
 
-  reset_bubble(chart, tip_bubble)
-  //tip_bubble.hide() // Hide at the beginning of the transition
+  if (no_transition) {
+    var t = d3.transition()
+      .duration(0)
+  }
+
+  else {
+    tip_bubble.hide()  // Hide tip at the beginning of the transition
+
+    var t = d3.transition()
+      .ease(d3.easeCubic)
+      .duration(1600)
+      .on("end", function () { if ($('.bubble_selected').length != 0) { tip_bubble.show($('.bubble_selected')[0].__data__) } })
+  }
 
   // Calculate bubbles scale
   rmax = d3.max(data, function (d) { return d.NStudents })
-  if (width < 500) { rscale = d3.scaleSqrt().domain([0, rmax]).range([3.5, 20]); }
+  if ((width < 420) || (height < 370)) { rscale = d3.scaleSqrt().domain([0, rmax]).range([3.5, 20]); }
   else { rscale = d3.scaleSqrt().domain([0, rmax]).range([5, 30]) }
 
 
@@ -180,7 +186,7 @@ function draw_bubble(chart, data, xtext, ytext) {
     // Create the bubbles //
     var bubble_chart = chart.select(".bubble_chart")
       .selectAll(".bubble-element")
-      .data(data)
+      .data(data, function (d) { return d.id })  //WORKING!
 
     // Remove old bubbles
     bubble_chart.exit().remove()
@@ -192,7 +198,7 @@ function draw_bubble(chart, data, xtext, ytext) {
       .style("fill-opacity", 0.7)
       .on("click", function () {
         if (d3.select(this.firstChild).classed("bubble_selected")) { reset_bubble(chart, tip_bubble) }
-        else { fade_bubble(this.__data__.Name, newbubble, tip_bubble) }
+        else { fade_bubble(this.__data__.Name, bubble_chart, tip_bubble) }
       })
       .on("mouseover", function () {
         if ($('.bubble_selected').length == 0)  // Check if any bubble has been selected and deactivate the mouseover if so
@@ -224,7 +230,6 @@ function draw_bubble(chart, data, xtext, ytext) {
         return rscale(d.NStudents);
       })
       .style("fill", "#ff8808") //Easter egg ;)
-    // .on("end", function () { if ($('.bubble_selected').length != 0) { tip_bubble.show($('.bubble_selected')[0].__data__) } })
 
     bubble_chart.merge(newbubble)
       .select("text")
@@ -271,7 +276,7 @@ function draw_bubble(chart, data, xtext, ytext) {
     // Create the bubbles
     var bubble_chart = chart.select(".bubble_chart")
       .selectAll(".bubble-element")
-      .data(data)
+      .data(data, function (d) { return d.id })
 
     // Remove old bubbles
     bubble_chart.exit().remove()
@@ -314,8 +319,7 @@ function draw_bubble(chart, data, xtext, ytext) {
       .attr("r", function (d) {
         return rscale(d.NStudents);
       })
-      .style("fill", "#ff8808") //Easter egg ;)
-    // .on("end", function () { if ($('.bubble_selected').length != 0) { tip_bubble.show($('.bubble_selected')[0].__data__) } })
+      .style("fill", "#ff8808")
 
     bubble_chart.merge(newbubble)
       .select("text")

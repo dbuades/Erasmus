@@ -32,7 +32,7 @@
 </div>
 </body>
 
-<div id="visualization" class="w3-display-container" style="height:100%;max-width:1400px; visibility:hidden">
+<div id="visualization" class="w3-display-container" style="height:100%;width:100%; visibility:hidden">
 
     <!-- SIDEBAR -->
     <nav class="w3-sidebar  w3-collapse w3-top w3-card" style="z-index:3;width:300px" id="filters_bar">
@@ -56,9 +56,9 @@
           Gender <i class="fa fa-caret-down"></i>
         </a>
 
-            <div id="opengender" class="w3-bar-block w3-hide w3-medium gender_bt unselectable">
-                <label><input class="w3-bar-item w3-check" type="checkbox" id="male_bt" value=M>Male</label>
-                <label><input class="w3-bar-item w3-check" type="checkbox" id="female_bt" value=F>Female</label>
+            <div id="opengender" class="w3-bar-block w3-hide gender_bt unselectable">
+                <label class="check_label"><input class="check" type="checkbox" id="male_bt" value=M>Male</label></br>
+                <label class="check_label"><input class="check" type="checkbox" id="female_bt" value=F>Female</label></br>
             </div>
 
 
@@ -66,35 +66,35 @@
           Cycle <i class="fa fa-caret-down"></i>
         </a>
 
-            <div id="opencycle" class="w3-bar-block w3-hide w3-medium cycle_bt unselectable">
-                <label><input class="w3-bar-item w3-check" type="checkbox" id="first_bt" value=1>First</label>
-                <label><input class="w3-bar-item w3-check" type="checkbox" id="second_bt" value=2>Second</label>
-                <label><input class="w3-bar-item w3-check" type="checkbox" id="third_bt" value=3>Third</label>
+            <div id="opencycle" class="w3-bar-block w3-hide cycle_bt unselectable">
+                <label class="check_label"><input class="check" type="checkbox" id="first_bt" value=1>First</label></br>
+                <label class="check_label"><input class="check" type="checkbox" id="second_bt" value=2>Second</label></br>
+                <label class="check_label"><input class="check" type="checkbox" id="third_bt" value=3>Third</label></br>
             </div>
 
         <a onclick="opensession()" href="javascript:void(0)" class="w3-button w3-block w3-white w3-center">
           Session <i class="fa fa-caret-down"></i>
         </a>
         
-            <div id="opensession" class="w3-bar-block w3-hide w3-medium session_bt unselectable">
-                <label><input class="w3-bar-item w3-check" type="checkbox" id="year_bt" value=1>Year</label>
-                <label><input class="w3-bar-item w3-check" type="checkbox" id="autumn_bt" value=2>Autumn</label><br>
-                <label><input class="w3-bar-item w3-check" type="checkbox" id="spring_bt" value=3>Spring</label><br><br>
+            <div id="opensession" class="w3-bar-block w3-hide session_bt unselectable">
+                <label class="check_label"><input class="check" type="checkbox" id="year_bt" value=1>Year</label></br>
+                <label class="check_label"><input class="check" type="checkbox" id="autumn_bt" value=2>Autumn</label></br>
+                <label class="check_label"><input class="check" type="checkbox" id="spring_bt" value=3>Spring</label></br>
             </div>
 
         <a onclick="opendomain()" href="javascript:void(0)" class="w3-button w3-block w3-white w3-center">
           Domain <i class="fa fa-caret-down"></i>
         </a>
               
-            <div id="opendomain" class="w3-bar-block w3-hide w3-medium domain_bt unselectable">
-                <label><input class="w3-bar-item w3-check" type="checkbox" id="education_bt" value=1>Education</label><br>
-                <label><input class="w3-bar-item w3-check" type="checkbox" id="humanities_bt" value=2>Humanities</label><br>
-                <label><input class="w3-bar-item w3-check" type="checkbox" id="social_bt" value=3>Social sciences</label><br>
-                <label><input class="w3-bar-item w3-check" type="checkbox" id="science_bt" value=4>Science</label><br>
-                <label><input class="w3-bar-item w3-check" type="checkbox" id="engineering_bt" value=5>Engineering</label><br>
-                <label><input class="w3-bar-item w3-check" type="checkbox" id="agriculture_bt" value=6>Agriculture</label><br>
-                <label><input class="w3-bar-item w3-check" type="checkbox" id="health_bt" value=7>Health</label><br>
-                <label><input class="w3-bar-item w3-check" type="checkbox" id="services_bt" value=8>Services</label><br><br>
+            <div id="opendomain" class="w3-bar-block w3-hide domain_bt unselectable">
+                <label class="check_label"><input class="check" type="checkbox" id="education_bt" value=1>Education</label><br>
+                <label class="check_label"><input class="check" type="checkbox" id="humanities_bt" value=2>Humanities</label><br>
+                <label class="check_label"><input class="check" type="checkbox" id="social_bt" value=3>Social sciences</label><br>
+                <label class="check_label"><input class="check" type="checkbox" id="science_bt" value=4>Science</label><br>
+                <label class="check_label"><input class="check" type="checkbox" id="engineering_bt" value=5>Engineering</label><br>
+                <label class="check_label"><input class="check" type="checkbox" id="agriculture_bt" value=6>Agriculture</label><br>
+                <label class="check_label"><input class="check" type="checkbox" id="health_bt" value=7>Health</label><br>
+                <label class="check_label"><input class="check" type="checkbox" id="services_bt" value=8>Services</label><br><br>
             </div>
 
         <div class="w3-padding-32 w3-center unselectable">
@@ -122,10 +122,10 @@
 
 
         <!-- Top header -->
-        <header class="w3-container w3-padding-large w3-center w3-bar w3-xlarge w3-card">
+        <header id="viz_buttons" class="w3-container w3-padding-large w3-center w3-bar w3-xlarge w3-card">
             
-            <button class="w3-bar-item w3-button chart_bt chart_bt_active" style="width:45%" id="bubble_bt" onclick="toggle_viz()">General view</button>
-            <button class="w3-bar-item w3-button chart_bt" style="width:45%" id="sankey_bt" onclick="toggle_viz()">Flux</button>
+            <button class="w3-bar-item w3-button chart_bt chart_bt_active w3-center" style="width:38%" id="bubble_bt" onclick="toggle_viz()">General</button>
+            <button class="w3-bar-item w3-button chart_bt w3-center" style="width:38%" id="sankey_bt" onclick="toggle_viz()">Flux</button>
             <a href="javascript:void(0)" class="w3-hide-large w3-button w3-right" onclick="w3_open()"><i class="fa fa-bars"></i></a>
 
         </header>
@@ -133,7 +133,7 @@
 
         <!-- VIZ -->
       
-        <div class="w3-display-container w3-padding-large w3-center w3-card" style="margin-top:20px" id="viz_here">
+        <div class="w3-display-container w3-padding-large w3-center w3-card" style="margin-top:10px" id="viz_here">
 
                 <a href="#" class="w3-container w3-display-topleft fa fa-close w3-xxlarge arrow_icon" style="margin-top:25px;margin-left:40px;color:#6d7887;text-decoration:none;display:none" id="reset_countries"></a>
                 <button class="w3-container w3-display-topmiddle w3-btn w3-padding w3-medium w3-teal" style="margin-top:30px;display:none" id="filter_countries">Filter</button>
