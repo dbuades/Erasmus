@@ -38,7 +38,7 @@ var windowHeight = $(window).height()
 
 // Initial draw
 var svg_width = $("#viz_here").width()
-var svg_height = Math.max($(window).height()- 120,400)
+var svg_height = Math.max($(window).height()-120,500)
 
 var width = svg_width - margin.left - margin.right
 var height = svg_height - margin.top - margin.bottom
@@ -62,7 +62,7 @@ function resize_canvas() {
 
     // Update dimensions
     var svg_width = $("#viz_here").width()
-    var svg_height = Math.max($(window).height()- 120,400)
+    var svg_height = Math.max($(window).height()-120,500)
     width = svg_width - margin.left - margin.right
     height = svg_height - margin.top - margin.bottom
 
