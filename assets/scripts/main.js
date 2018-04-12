@@ -33,12 +33,12 @@ var margin = {
 var nodeWidth = 20 // Sankey
 
 // Used to check if the window has really been resized
-var windowWidth = Math.max($(window).width(),310)
+var windowWidth = $(window).width()
 var windowHeight = $(window).height()
 
 // Initial draw
-var svg_width = $("#viz_here").width() // First size
-var svg_height = $(window).height()- 120
+var svg_width = Math.max($("#viz_here").width(),400)
+var svg_height = Math.max($(window).height()- 120,400)
 
 var width = svg_width - margin.left - margin.right
 var height = svg_height - margin.top - margin.bottom
@@ -61,8 +61,8 @@ var border = canvas.append("rect")
 function resize_canvas() {
 
     // Update dimensions
-    svg_width = $("#viz_here").width()
-    svg_height = $(window).height() - 120
+    var svg_width = Math.max($("#viz_here").width(),400)
+    var svg_height = Math.max($(window).height()- 120,400)
     width = svg_width - margin.left - margin.right
     height = svg_height - margin.top - margin.bottom
 
