@@ -1,6 +1,8 @@
 
 /* Typography */
-.w3-sidebar,body,h1,h2,h3,h4,h5,h6,.w3-wide {font-family: "Roboto", sans-serif;}
+* {
+  font-family: "Roboto", sans-serif;
+}
 
 /* Set margin to zero for the bg color*/
 * {
@@ -175,7 +177,7 @@ button:active {
 }
 
 .d3-tip:after {
-  display: inline;
+  display: inline-block;
   top: 50%;
   left: -52%;
   width: 100%;
