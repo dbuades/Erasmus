@@ -249,7 +249,6 @@ function fade_sankey(svg, selection_send, selection_rec) {
     //Show filter and reset buttons
     $("#filter_countries").css("display", "inline")
     $("#reset_countries").css("display", "inline")
-    $("#reset_filters").addClass("reset_bt_active")
 
     svg.selectAll(".node, .node_deselected, .node_selected").attr("class", function (d) {
 

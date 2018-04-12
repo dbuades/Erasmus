@@ -213,6 +213,7 @@ Promise.all([
                 // Remove countries selection
                 selection_send = []
                 selection_rec = []
+
                 filtered = filter(data)
                 total_students.innerHTML = filtered.length
 
@@ -227,7 +228,6 @@ Promise.all([
             })
 
             /////////////////FILTERS///////////////////////////
-
 
             // Get the gender
             $(".gender_bt").click(function () {
@@ -250,10 +250,7 @@ Promise.all([
                     sankey = prep_flow(filtered, names);
                     sankey_chart = draw_sankey_chart(canvas);
                     sankey_chart = draw_sankey(sankey_chart, sankey)
-                }
-
-                // Activate the reset button
-                $("#reset_filters").addClass("reset_bt_active")
+                }               
             })
 
             // Get the cycle
@@ -276,8 +273,6 @@ Promise.all([
                     sankey_chart = draw_sankey_chart(canvas);
                     sankey_chart = draw_sankey(sankey_chart, sankey)
                 }
-
-                $("#reset_filters").addClass("reset_bt_active")
             })
 
             // Get the session
@@ -300,8 +295,6 @@ Promise.all([
                     sankey_chart = draw_sankey_chart(canvas);
                     sankey_chart = draw_sankey(sankey_chart, sankey)
                 }
-
-                $("#reset_filters").addClass("reset_bt_active")
             })
 
 
@@ -325,8 +318,6 @@ Promise.all([
                     sankey_chart = draw_sankey_chart(canvas);
                     sankey_chart = draw_sankey(sankey_chart, sankey)
                 }
-
-                $("#reset_filters").addClass("reset_bt_active")
             })
 
 
@@ -357,6 +348,7 @@ Promise.all([
                     countries_filt = false
                     selection_send = []
                     selection_rec = []
+
                     filtered = filter(data)
                     total_students.innerHTML = filtered.length
 
@@ -372,8 +364,6 @@ Promise.all([
 
             // Reset filters
             document.getElementById("reset_filters").onclick = function () {
-
-                $("#reset_filters").removeClass("reset_bt_active")
 
                 // Empty checkboxes
                 $(":checkbox:checked").prop("checked", false);

@@ -34,6 +34,14 @@ function filter(data) {
   if (selection_session.length > 0) { bySession.filterFunction(multivalue_filter(selection_session)) };
   if (selection_domain.length > 0) { byDomain.filterFunction(multivalue_filter(selection_domain)) };
 
+  // Turn on or off the reset button
+  if ( selection_send.length!=0 || selection_rec.length!=0 || selection_gender.length!=0 || selection_cycle.length!=0 || selection_session.length!=0 || selection_domain.length!=0) {
+    $("#reset_filters").addClass("reset_bt_active")
+  }
+  else{
+    $("#reset_filters").removeClass("reset_bt_active")
+  }
+
   // Return the results after the filter
   return cf.allFiltered()
 }
