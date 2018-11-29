@@ -22,9 +22,7 @@ tip_bubble.html(function (d) {
 })
 
 
-
 function draw_bubble_chart(canvas) {
-
 
   canvas.select(".chart")
     .remove()
@@ -61,6 +59,7 @@ function draw_bubble_chart(canvas) {
   chart.append("g")
     .attr("class", "bubble_chart")
 
+  // Legend
   var legendata = [40, 20, 10]
 
   var legend = chart.append("g")
@@ -78,14 +77,12 @@ function draw_bubble_chart(canvas) {
     .attr("fill", "grey")
     .attr("stroke-opacity", 0.6)
 
-
   legend.append("text")
     .text("University")
     .attr("transform", "translate(" + (width + margin.right / 3) + ", " + height * 7 / 8 + ")")
     .style("font-size", "10px")
     .attr("text-anchor", "middle")
     .attr("fill", "grey")
-
 
   legend.append("text")
     .text("Students in the")
@@ -106,12 +103,12 @@ function draw_bubble_chart(canvas) {
 }
 
 
-
 // Transition function
 function draw_bubble(chart, data, xtext, ytext, no_transition) {
 
   chart.call(tip_bubble)
 
+  // Transition
   if (no_transition) {
     var t = d3.transition()
       .duration(0)
@@ -135,7 +132,6 @@ function draw_bubble(chart, data, xtext, ytext, no_transition) {
   if (currentbutton == "normalized") {
 
     // Axis
-
     // we get the position of the first decimal value != 0 to resize the axis without 0.0000...
     function getDecimals(value) {
       var decimals = value.toString().split(".")[1]
@@ -157,10 +153,8 @@ function draw_bubble(chart, data, xtext, ytext, no_transition) {
     var expoy = getDecimals(ymax)
 
     // We change xmax and ymax to resize axis
-
     xmax = xmax * Math.pow(10, expox)
     ymax = ymax * Math.pow(10, expoy)
-
 
     var xscale = d3.scaleLinear().domain([0, xmax]).range([0, width]);
     var yscale = d3.scaleLinear().domain([0, ymax]).range([height, 0]);
@@ -177,11 +171,8 @@ function draw_bubble(chart, data, xtext, ytext, no_transition) {
       .transition(t)
       .call(yAxis)
 
-
     xtext.text("Ratio of students sent (e-" + expox + ")")
-
     ytext.text("Ratio of students received (e-" + expoy + ")")
-
 
     // Create the bubbles //
     var bubble_chart = chart.select(".bubble_chart")
@@ -198,7 +189,7 @@ function draw_bubble(chart, data, xtext, ytext, no_transition) {
       .style("fill-opacity", 0.7)
       .on("click", function () {
         if (d3.select(this.firstChild).classed("bubble_selected")) { reset_bubble(chart, tip_bubble) }
-        else { fade_bubble(this.__data__.Name, bubble_chart, tip_bubble) }
+        else { fade_bubble(this.__data__.Name, newbubble, tip_bubble) }
       })
       .on("mouseover", function () {
         if ($('.bubble_selected').length == 0)  // Check if any bubble has been selected and deactivate the mouseover if so
@@ -247,17 +238,15 @@ function draw_bubble(chart, data, xtext, ytext, no_transition) {
 
   else if (currentbutton == "absolute") {
 
-    var text_rec = "Students Received"
-    var text_send = "Students Sent"
-
-    var xmax = 1.1 * (d3.max(data, function (d) { return d.Receiving }))
-    var ymax = 1.1 * (d3.max(data, function (d) { return d.Sending }))
-
+    xmax = 1.1 * (d3.max(data, function (d) { return d.Receiving }))
+    ymax = 1.1 * (d3.max(data, function (d) { return d.Sending }))
+    
     var xscale = d3.scaleLinear().domain([0, xmax]).range([0, width]);
     var yscale = d3.scaleLinear().domain([0, ymax]).range([height, 0]);
 
     var xAxis = d3.axisBottom(xscale)
     var yAxis = d3.axisLeft(yscale)
+
 
     chart.select(".Xaxis")
       .transition(t)
@@ -267,13 +256,10 @@ function draw_bubble(chart, data, xtext, ytext, no_transition) {
       .transition(t)
       .call(yAxis)
 
+    xtext.text("Students Received")
+    ytext.text("Students Sent")
 
-    xtext.text(text_rec)
-
-    ytext.text(text_send)
-
-
-    // Create the bubbles
+    // Create the bubbles //
     var bubble_chart = chart.select(".bubble_chart")
       .selectAll(".bubble-element")
       .data(data, function (d) { return d.id })
@@ -319,7 +305,7 @@ function draw_bubble(chart, data, xtext, ytext, no_transition) {
       .attr("r", function (d) {
         return rscale(d.NStudents);
       })
-      .style("fill", "#ff8808")
+      .style("fill", "#ff8808") //Easter egg ;)
 
     bubble_chart.merge(newbubble)
       .select("text")

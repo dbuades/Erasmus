@@ -14,7 +14,7 @@ var selection_cycle = []
 var selection_session = []
 var selection_domain = []
 
-// Tell if the countries have been filered
+// Tell if the countries have been filtered
 var countries_filt = false
 
 // By default the data showing is "absolute"
@@ -63,6 +63,7 @@ function resize_canvas() {
     // Update dimensions
     var svg_width = $("#viz_here").width()
     var svg_height = Math.max($(window).height()-120,500)
+
     width = svg_width - margin.left - margin.right
     height = svg_height - margin.top - margin.bottom
 
@@ -77,440 +78,424 @@ function resize_canvas() {
 }
 
 
-
-
 // DATA LOADING //
+// All the functions that need data, must be included after "Promise". That's why resize_bubble is defined here.
+
 Promise.all([
     d3.csv('./data/data.csv'),
     d3.json('./data/names.json')
-])
-    .then(([data, names]) => {
+    ])
+.then(([data, names]) => {
 
-        data.map(function (d) {
-            d.Cycle = +d.Cycle;
-            d.Domain = +d.Domain;
-            d.Session = +d.Session;
-        });
+    function resize_bubble(no_transition) {
+        returns = draw_bubble_chart(canvas)
+        bubble_chart = returns[0]
+        xtext = returns[1]
+        ytext = returns[2]
+        bubble_chart = draw_bubble(bubble_chart, bubble, xtext, ytext, no_transition)
+    }
+
+    data.map(function (d) {
+        d.Cycle = +d.Cycle;
+        d.Domain = +d.Domain;
+        d.Session = +d.Session;
+    });
+
+    // Create the colors for each country
+    names.map(function (d, i) {
+        d.Color = d3.interpolateViridis(i / names.length)
+    })
+
+    // No filters at the beginning
+    var filtered = data
+    total_students.innerHTML = filtered.length
+    var bubble = prep_bubble(filtered, names)
+    var sankey = prep_flow(filtered, names);
 
 
-        // Create the colors for each country
-        names.map(function (d, i) {
-            d.Color = d3.interpolateViridis(i / names.length)
+    /////////////////BUTTONS LOGIC///////////////////////////
+    $(document).ready(function () {
+
+        // Close the storytelling and initialize the visualization
+        $("#go_viz").click(function () {
+            $("#intro").css("display", "none")
+            $("#visualization").css("display", "inline")
+
+            resize_canvas()
+            resize_bubble(false)
         })
 
-        // No filters at the beginning
-        var filtered = data
-        total_students.innerHTML = filtered.length
+        // Redraw on resize
+        $(window).resize(function () {
 
-        // Start with bubble chart without filters by default
-        var bubble = prep_bubble(filtered, names)
-        var sankey = prep_flow(filtered, names);
+            // Check if the screen was really resized (avoid unwanted resize on touchscreens)
+            if ( ($(window).width() != windowWidth) || ($(window).height() != windowHeight) ) {
 
-
-        // We initially draw the bubble_chart
-        var returns = draw_bubble_chart(canvas)
-        var bubble_chart = returns[0]
-        var xtext = returns[1]
-        var ytext = returns[2]
-        bubble_chart = draw_bubble(bubble_chart, bubble, xtext, ytext)
-
-
-        /* 
-          // Group by country (for a future map if we ever do it)
-          var group = prep_group(filtered,"sending")
-          console.log(group)
-        */
-
-
-        /////////////////BUTTONS LOGIC///////////////////////////
-
-        $(document).ready(function () {
-
-            // Redraw on resize
-
-            $(window).resize(function () {
-
-                // Check if the screen was really resized (avoid unwanted resize on touchscreens)
-                if ( ($(window).width() != windowWidth) || ($(window).height() != windowHeight) ) {
-
-                    windowWidth = $(window).width()
-                    windowHeight = $(window).height()
-                    
-                    // Update dimensions and redraw
-                    resize_canvas()
-
-
-                    if (currentviz == "bubble") {
-
-                        returns = draw_bubble_chart(canvas)
-                        bubble_chart = returns[0]
-                        xtext = returns[1]
-                        ytext = returns[2]
-                        bubble_chart = draw_bubble(bubble_chart, bubble, xtext, ytext, true)
-                    }
-
-                    else if (currentviz == "sankey") {
-                        sankey_chart = draw_sankey_chart(canvas);
-                        sankey_chart = draw_sankey(sankey_chart, sankey)
-                    }
-                }
-
-            })
-
-
-            // Absolute / Normalize
-
-            $("#norm_bt").click(function () {
-                currentbutton = "normalized"
-
+                windowWidth = $(window).width()
+                windowHeight = $(window).height()
+                
+                // Update dimensions and redraw
+                resize_canvas()
+                
                 if (currentviz == "bubble") {
-                    bubble_chart = draw_bubble(bubble_chart, bubble, xtext, ytext)
+                    resize_bubble(true)
                 }
+
                 else if (currentviz == "sankey") {
-                    filtered = filter(data) // For the sankey diagram, we need to refilter
-                    sankey = prep_flow(filtered, names);
                     sankey_chart = draw_sankey_chart(canvas);
                     sankey_chart = draw_sankey(sankey_chart, sankey)
                 }
-            })
+            }
+
+        })
 
 
-            $("#abs_bt").click(function () {
-                currentbutton = "absolute"
+        // Change betwen absolute and normalized values
+        $("#norm_bt").click(function () {
+            currentbutton = "normalized"
 
-                if (currentviz == "bubble") {
-                    bubble_chart = draw_bubble(bubble_chart, bubble, xtext, ytext)
-                }
-                else if (currentviz == "sankey") {
-                    filtered = filter(data)
-                    sankey = prep_flow(filtered, names);
-                    sankey_chart = draw_sankey_chart(canvas);
-                    sankey_chart = draw_sankey(sankey_chart, sankey)
-                }
-            })
-
-
-            //Get which viz to show
-
-            // (Sankey/Alluvial) chart
-            $("#sankey_bt").click(function () {
-                currentviz = "sankey"
-
+            if (currentviz == "bubble") {
+                bubble_chart = draw_bubble(bubble_chart, bubble, xtext, ytext)
+            }
+            else if (currentviz == "sankey") {
+                filtered = filter(data) // For the sankey diagram, we need to refilter
                 sankey = prep_flow(filtered, names);
-
                 sankey_chart = draw_sankey_chart(canvas);
                 sankey_chart = draw_sankey(sankey_chart, sankey)
-            })
-
-            // Bubble chart
-            $("#bubble_bt").click(function () {
-                currentviz = "bubble"
-
-                // Hide buttons for country filtering and reset
-                $("#reset_countries").css("display", "none")
-                $("#filter_countries").css("display", "none")
-
-                // Remove countries selection
-                selection_send = []
-                selection_rec = []
-
-                filtered = filter(data)
-                total_students.innerHTML = filtered.length
-
-                bubble = prep_bubble(filtered, names);
-
-                returns = draw_bubble_chart(canvas)
-                bubble_chart = returns[0]
-                xtext = returns[1]
-                ytext = returns[2]
-
-                bubble_chart = draw_bubble(bubble_chart, bubble, xtext, ytext);
-            })
-
-            /////////////////FILTERS///////////////////////////
-
-            // Get the gender
-            $(".gender_bt").click(function () {
-
-                selection_gender = $(".gender_bt input:checkbox:checked").map(function () {
-                    return $(this).val();
-                }).get();
-
-                // Filter
-                filtered = filter(data)
-                total_students.innerHTML = filtered.length
-
-                // Update the visualization
-                if (currentviz == "bubble") {
-                    bubble = prep_bubble(filtered, names);
-                    bubble_chart = draw_bubble(bubble_chart, bubble, xtext, ytext);
-                }
-
-                else if (currentviz == "sankey") {
-                    sankey = prep_flow(filtered, names);
-                    sankey_chart = draw_sankey_chart(canvas);
-                    sankey_chart = draw_sankey(sankey_chart, sankey)
-                }               
-            })
-
-            // Get the cycle
-            $(".cycle_bt").click(function () {
-
-                selection_cycle = $(".cycle_bt input:checkbox:checked").map(function () {
-                    return +$(this).val();
-                }).get();
-
-                filtered = filter(data)
-                total_students.innerHTML = filtered.length
-
-                if (currentviz == "bubble") {
-                    bubble = prep_bubble(filtered, names);
-                    bubble_chart = draw_bubble(bubble_chart, bubble, xtext, ytext);
-                }
-
-                else if (currentviz == "sankey") {
-                    sankey = prep_flow(filtered, names);
-                    sankey_chart = draw_sankey_chart(canvas);
-                    sankey_chart = draw_sankey(sankey_chart, sankey)
-                }
-            })
-
-            // Get the session
-            $(".session_bt").click(function () {
-
-                selection_session = $(".session_bt input:checkbox:checked").map(function () {
-                    return +$(this).val();
-                }).get();
-
-                filtered = filter(data)
-                total_students.innerHTML = filtered.length
-
-                if (currentviz == "bubble") {
-                    bubble = prep_bubble(filtered, names);
-                    bubble_chart = draw_bubble(bubble_chart, bubble, xtext, ytext);
-                }
-
-                else if (currentviz == "sankey") {
-                    sankey = prep_flow(filtered, names);
-                    sankey_chart = draw_sankey_chart(canvas);
-                    sankey_chart = draw_sankey(sankey_chart, sankey)
-                }
-            })
-
-
-            // Get the domain
-            $(".domain_bt").click(function () {
-
-                selection_domain = $(".domain_bt input:checkbox:checked").map(function () {
-                    return +$(this).val();
-                }).get();
-
-                filtered = filter(data)
-                total_students.innerHTML = filtered.length
-
-                if (currentviz == "bubble") {
-                    bubble = prep_bubble(filtered, names);
-                    bubble_chart = draw_bubble(bubble_chart, bubble, xtext, ytext);
-                }
-
-                else if (currentviz == "sankey") {
-                    sankey = prep_flow(filtered, names);
-                    sankey_chart = draw_sankey_chart(canvas);
-                    sankey_chart = draw_sankey(sankey_chart, sankey)
-                }
-            })
-
-
-            // Update countries on sankey chart
-            document.getElementById("filter_countries").onclick = function () {
-
-                if (currentviz == "sankey") {
-                    $("#filter_countries").css("display", "none")
-
-                    countries_filt = true
-
-                    filtered = filter(data)
-                    total_students.innerHTML = filtered.length
-
-                    sankey = prep_flow(filtered, names);
-                    sankey_chart = draw_sankey_chart(canvas);
-                    sankey_chart = draw_sankey(sankey_chart, sankey)
-                }
             }
+        })
 
+        $("#abs_bt").click(function () {
+            currentbutton = "absolute"
 
-            // Reset countries on sankey chart
-            document.getElementById("reset_countries").onclick = function () {
-
-                if (currentviz == "sankey") {
-
-                    // Delete filters by country
-                    countries_filt = false
-                    selection_send = []
-                    selection_rec = []
-
-                    filtered = filter(data)
-                    total_students.innerHTML = filtered.length
-
-                    sankey = prep_flow(filtered, names);
-                    sankey_chart = draw_sankey_chart(canvas);
-                    sankey_chart = draw_sankey(sankey_chart, sankey)
-
-                    $("#reset_countries").css("display", "none")
-                    $("#filter_countries").css("display", "none")
-                }
+            if (currentviz == "bubble") {
+                bubble_chart = draw_bubble(bubble_chart, bubble, xtext, ytext)
             }
-
-
-            // Reset filters
-            document.getElementById("reset_filters").onclick = function () {
-
-                // Empty checkboxes
-                $(":checkbox:checked").prop("checked", false);
-
-                // Empty the filters
-                selection_send = []
-                selection_rec = []
-
-                selection_gender = []
-                selection_cycle = []
-                selection_session = []
-                selection_domain = []
-
-                countries_filt = false
-
-                filtered = filter(data);
-                total_students.innerHTML = filtered.length
-
-                if (currentviz == "bubble") {
-                    $("#search-bar input").val("");
-                    reset_bubble(bubble_chart.select(".bubble_chart"), tip_bubble)
-                    bubble = prep_bubble(filtered, names);
-                    bubble_chart = draw_bubble(bubble_chart, bubble, xtext, ytext);
-                }
-
-                else if (currentviz == "sankey") {
-                    reset_sankey(sankey_chart.select(".sankey_chart"))
-                    sankey = prep_flow(filtered, names);
-                    sankey_chart = draw_sankey_chart(canvas);
-                    sankey_chart = draw_sankey(sankey_chart, sankey)
-
-                    $("#reset_countries").css("display", "none")
-                    $("#filter_countries").css("display", "none")
-                }
+            else if (currentviz == "sankey") {
+                filtered = filter(data)
+                sankey = prep_flow(filtered, names);
+                sankey_chart = draw_sankey_chart(canvas);
+                sankey_chart = draw_sankey(sankey_chart, sankey)
             }
-
         })
 
 
+        // Change the visualization to show
 
+        // (Sankey/Alluvial) chart
+        $("#sankey_bt").click(function () {
+            currentviz = "sankey"
 
-        ////////////////SEARCH SECTION///////////////////////////
+            sankey = prep_flow(filtered, names);
 
+            sankey_chart = draw_sankey_chart(canvas);
+            sankey_chart = draw_sankey(sankey_chart, sankey)
+        })
 
-        // AutoComplete
-        new autoComplete({
+        // Bubble chart
+        $("#bubble_bt").click(function () {
+            currentviz = "bubble"
 
-            selector: "#search-bar input",
-            minChars: 1,
-            delay: 50, // Más rápido pero más carga
-            source: function (term, response) {
+            // Hide buttons for country filtering and reset
+            $("#reset_countries").css("display", "none")
+            $("#filter_countries").css("display", "none")
 
-                var values = [];
-                term = term.toLowerCase();
-                bubble.forEach(function (d) {
-                    if (~d.Name.toLowerCase().indexOf(term)) {
-                        values.push(d);
-                    }
-                });
-                response(values);
-            },
+            // Remove countries selection
+            selection_send = []
+            selection_rec = []
 
-            renderItem: function (item, search) {
-                search = search.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-                var re = new RegExp("(" + search.split(' ').join('|') + ")", "gi");
-                return "<div class='autocomplete-suggestion' data-val='"
-                    + item.Name + "'>" + item.Name.replace(re, "<b>$1</b>") + "</div>";
-            },
+            filtered = filter(data)
+            total_students.innerHTML = filtered.length
 
-            onSelect: function (event, term, item) {
+            bubble = prep_bubble(filtered, names);
 
-                if (currentviz == "bubble") {
-                    fade_bubble(item.getAttribute("data-val"), bubble_chart.select(".bubble_chart"), tip_bubble);
-                }
-                else if (currentviz == "sankey") {
+            returns = draw_bubble_chart(canvas)
+            bubble_chart = returns[0]
+            xtext = returns[1]
+            ytext = returns[2]
 
-                    // Get the id and add to the filter 
-                    var country_id = (_.find(names, function (d) { if (d.Name == item.getAttribute("data-val")) return d })).id
-                    selection_send.push(country_id)
-                    selection_rec.push(country_id)
+            bubble_chart = draw_bubble(bubble_chart, bubble, xtext, ytext);
+        })
 
-                    // We need to manually select the node (not included in fade_sankey) because we want both sides selected
-                    sankey_chart.select(".sankey_chart").selectAll(".node, .node_deselected, .node_selected").attr("class", function (d) {
+        /////////////////FILTERS///////////////////////////
 
-                        //console.log (d.name, country_id)
-                        if ((d3.select(this).classed("node_selected") == true) || (d.name == country_id)) {
-                            // console.log (d.name, country_id)
-                            return "node_selected"
-                        }
-                        else {
-                            return "node_deselected"
-                        }
+        // Get the gender
+        $(".gender_bt").click(function () {
 
-                    })
+            selection_gender = $(".gender_bt input:checkbox:checked").map(function () {
+                return $(this).val();
+            }).get();
 
-                    fade_sankey(sankey_chart.select(".sankey_chart"), selection_send, selection_rec);
-                }
-            }
-        });
+            // Filter
+            filtered = filter(data)
+            total_students.innerHTML = filtered.length
 
-
-        // Each time that we write a letter on the search box
-        var searchBarInput = d3.select("#search-bar input");
-        searchBarInput.on("keydown", function () {
-            if (d3.event.key === "Enter") {
-                validateInput();
-            } else {
-                if (currentviz == "bubble") { reset_bubble(bubble_chart.select(".bubble_chart"), tip_bubble); }
-                // else if (currentviz == "sankey") { reset_sankey(sankey_chart.select(".sankey_chart")); } // We don´t want to clean it each time in the Sankey
-                searchBarInput.classed("error", false);
-            }
-        });
-
-        // Each time that we click on the search button
-        d3.select("#search-bar button")
-            .on("click", validateInput)
-
-        // Check if the input corresponds to a country
-        function validateInput() {
-            function normalize(str) {
-                return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-            }
-            var value = searchBarInput.node().value.toLowerCase();
-            if (!value) {
-                return;
-            }
-            var currentValue = normalize(value);
-            const countryFound = bubble.find(function (d) {
-                return normalize(d.Name.toLowerCase()) === currentValue;
-            });
-
-            if (countryFound) {
-                if (currentviz == "bubble") {
-                    fade_bubble(countryFound.Name, bubble_chart.select(".bubble_chart"), tip_bubble)
-                }
-                else if (currentviz == "sankey") {
-                    fade_sankey(sankey_chart.select(".sankey_chart"), selection_send, selection_rec);
-                }
+            // Update the visualization
+            if (currentviz == "bubble") {
+                bubble = prep_bubble(filtered, names);
+                bubble_chart = draw_bubble(bubble_chart, bubble, xtext, ytext);
             }
 
-            else {
-                searchBarInput.classed("error", true);
+            else if (currentviz == "sankey") {
+                sankey = prep_flow(filtered, names);
+                sankey_chart = draw_sankey_chart(canvas);
+                sankey_chart = draw_sankey(sankey_chart, sankey)
+            }               
+        })
+
+        // Get the cycle
+        $(".cycle_bt").click(function () {
+
+            selection_cycle = $(".cycle_bt input:checkbox:checked").map(function () {
+                return +$(this).val();
+            }).get();
+
+            filtered = filter(data)
+            total_students.innerHTML = filtered.length
+
+            if (currentviz == "bubble") {
+                bubble = prep_bubble(filtered, names);
+                bubble_chart = draw_bubble(bubble_chart, bubble, xtext, ytext);
+            }
+
+            else if (currentviz == "sankey") {
+                sankey = prep_flow(filtered, names);
+                sankey_chart = draw_sankey_chart(canvas);
+                sankey_chart = draw_sankey(sankey_chart, sankey)
+            }
+        })
+
+        // Get the session
+        $(".session_bt").click(function () {
+
+            selection_session = $(".session_bt input:checkbox:checked").map(function () {
+                return +$(this).val();
+            }).get();
+
+            filtered = filter(data)
+            total_students.innerHTML = filtered.length
+
+            if (currentviz == "bubble") {
+                bubble = prep_bubble(filtered, names);
+                bubble_chart = draw_bubble(bubble_chart, bubble, xtext, ytext);
+            }
+
+            else if (currentviz == "sankey") {
+                sankey = prep_flow(filtered, names);
+                sankey_chart = draw_sankey_chart(canvas);
+                sankey_chart = draw_sankey(sankey_chart, sankey)
+            }
+        })
+
+
+        // Get the domain
+        $(".domain_bt").click(function () {
+
+            selection_domain = $(".domain_bt input:checkbox:checked").map(function () {
+                return +$(this).val();
+            }).get();
+
+            filtered = filter(data)
+            total_students.innerHTML = filtered.length
+
+            if (currentviz == "bubble") {
+                bubble = prep_bubble(filtered, names);
+                bubble_chart = draw_bubble(bubble_chart, bubble, xtext, ytext);
+            }
+
+            else if (currentviz == "sankey") {
+                sankey = prep_flow(filtered, names);
+                sankey_chart = draw_sankey_chart(canvas);
+                sankey_chart = draw_sankey(sankey_chart, sankey)
+            }
+        })
+
+
+        // Update countries on sankey chart
+        document.getElementById("filter_countries").onclick = function () {
+
+            if (currentviz == "sankey") {
+                $("#filter_countries").css("display", "none")
+
+                countries_filt = true
+
+                filtered = filter(data)
+                total_students.innerHTML = filtered.length
+
+                sankey = prep_flow(filtered, names);
+                sankey_chart = draw_sankey_chart(canvas);
+                sankey_chart = draw_sankey(sankey_chart, sankey)
             }
         }
 
-        //////////////////////////////////////////////////////////////////////
+
+        // Reset countries on sankey chart
+        document.getElementById("reset_countries").onclick = function () {
+
+            if (currentviz == "sankey") {
+
+                // Delete filters by country
+                countries_filt = false
+                selection_send = []
+                selection_rec = []
+
+                filtered = filter(data)
+                total_students.innerHTML = filtered.length
+
+                sankey = prep_flow(filtered, names);
+                sankey_chart = draw_sankey_chart(canvas);
+                sankey_chart = draw_sankey(sankey_chart, sankey)
+
+                $("#reset_countries").css("display", "none")
+                $("#filter_countries").css("display", "none")
+            }
+        }
 
 
+        // Reset filters
+        document.getElementById("reset_filters").onclick = function () {
+
+            // Empty checkboxes
+            $(":checkbox:checked").prop("checked", false);
+
+            // Empty the filters
+            selection_send = []
+            selection_rec = []
+
+            selection_gender = []
+            selection_cycle = []
+            selection_session = []
+            selection_domain = []
+
+            countries_filt = false
+
+            filtered = filter(data);
+            total_students.innerHTML = filtered.length
+
+            if (currentviz == "bubble") {
+                $("#search-bar input").val("");
+                reset_bubble(bubble_chart.select(".bubble_chart"), tip_bubble)
+                bubble = prep_bubble(filtered, names);
+                bubble_chart = draw_bubble(bubble_chart, bubble, xtext, ytext);
+            }
+
+            else if (currentviz == "sankey") {
+                reset_sankey(sankey_chart.select(".sankey_chart"))
+                sankey = prep_flow(filtered, names);
+                sankey_chart = draw_sankey_chart(canvas);
+                sankey_chart = draw_sankey(sankey_chart, sankey)
+
+                $("#reset_countries").css("display", "none")
+                $("#filter_countries").css("display", "none")
+            }
+        }
 
     })
+
+
+
+
+    ////////////////SEARCH SECTION///////////////////////////
+
+
+    // AutoComplete
+    new autoComplete({
+
+        selector: "#search-bar input",
+        minChars: 1,
+        delay: 50, // Más rápido pero más carga
+        source: function (term, response) {
+
+            var values = [];
+            term = term.toLowerCase();
+            bubble.forEach(function (d) {
+                if (~d.Name.toLowerCase().indexOf(term)) {
+                    values.push(d);
+                }
+            });
+            response(values);
+        },
+
+        renderItem: function (item, search) {
+            search = search.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+            var re = new RegExp("(" + search.split(' ').join('|') + ")", "gi");
+            return "<div class='autocomplete-suggestion' data-val='"
+                + item.Name + "'>" + item.Name.replace(re, "<b>$1</b>") + "</div>";
+        },
+
+        onSelect: function (event, term, item) {
+
+            if (currentviz == "bubble") {
+                fade_bubble(item.getAttribute("data-val"), bubble_chart.select(".bubble_chart"), tip_bubble);
+            }
+            else if (currentviz == "sankey") {
+
+                // Get the id and add to the filter 
+                var country_id = (_.find(names, function (d) { if (d.Name == item.getAttribute("data-val")) return d })).id
+                selection_send.push(country_id)
+                selection_rec.push(country_id)
+
+                // We need to manually select the node (not included in fade_sankey) because we want both sides selected
+                sankey_chart.select(".sankey_chart").selectAll(".node, .node_deselected, .node_selected").attr("class", function (d) {
+
+                    //console.log (d.name, country_id)
+                    if ((d3.select(this).classed("node_selected") == true) || (d.name == country_id)) {
+                        // console.log (d.name, country_id)
+                        return "node_selected"
+                    }
+                    else {
+                        return "node_deselected"
+                    }
+
+                })
+
+                fade_sankey(sankey_chart.select(".sankey_chart"), selection_send, selection_rec);
+            }
+        }
+    });
+
+
+    // Each time that we write a letter on the search box
+    var searchBarInput = d3.select("#search-bar input");
+    searchBarInput.on("keydown", function () {
+        if (d3.event.key === "Enter") {
+            validateInput();
+        } else {
+            if (currentviz == "bubble") { reset_bubble(bubble_chart.select(".bubble_chart"), tip_bubble); }
+            // else if (currentviz == "sankey") { reset_sankey(sankey_chart.select(".sankey_chart")); } // We don´t want to clean it each time in the Sankey
+            searchBarInput.classed("error", false);
+        }
+    });
+
+    // Each time that we click on the search button
+    d3.select("#search-bar button")
+        .on("click", validateInput)
+
+    // Check if the input corresponds to a country
+    function validateInput() {
+        function normalize(str) {
+            return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        }
+        var value = searchBarInput.node().value.toLowerCase();
+        if (!value) {
+            return;
+        }
+        var currentValue = normalize(value);
+        const countryFound = bubble.find(function (d) {
+            return normalize(d.Name.toLowerCase()) === currentValue;
+        });
+
+        if (countryFound) {
+            if (currentviz == "bubble") {
+                fade_bubble(countryFound.Name, bubble_chart.select(".bubble_chart"), tip_bubble)
+            }
+            else if (currentviz == "sankey") {
+                fade_sankey(sankey_chart.select(".sankey_chart"), selection_send, selection_rec);
+            }
+        }
+
+        else {
+            searchBarInput.classed("error", true);
+        }
+    }
+})
