@@ -117,7 +117,7 @@ Promise.all([
     $(document).ready(function () {
 
         // Close the storytelling and initialize the visualization
-        $("#go_viz").click(function () {
+        $("#intro").click(function () {
             $("#intro").css("display", "none")
             $("#visualization").css("display", "inline")
 
