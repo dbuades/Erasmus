@@ -1,6 +1,6 @@
 # Erasmus
 
-### Visualization of the Erasmus (EuRopean Community Action Scheme for the Mobility of University Students) 2013-2014 campaign.
+### Visualization of the Erasmus (EuRopean community Action Scheme for the Mobility of University Students) 2013-2014 campaign.
 
 There is a known error with one dependency and the visualization won't load with newer versions of Google Chrome, I will substitute it when I have some spare time.
 For now, please open it in any other browser!
